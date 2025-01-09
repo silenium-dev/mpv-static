@@ -50,22 +50,6 @@ fun AbstractCopyTask.licenses() {
     }
 }
 
-val nativesJar = if (deployNative) {
-    tasks.register<Jar>("nativesJar") {
-        dependsOn(compileNative)
-        // Required for configuration cache
-        val platform = platformString?.let { Platform(it) } ?: NativePlatform.platform()
-
-        from(compileDir.dir("lib")) {
-            include("*.so")
-            include("*.dll")
-            include("*.dylib")
-            into("natives/$platform/")
-        }
-        licenses()
-    }
-} else null
-
 val zipBuild = if (deployNative) {
     tasks.register<Zip>("zipBuild") {
         dependsOn(compileNative)
@@ -80,18 +64,11 @@ val zipBuild = if (deployNative) {
     }
 } else null
 
-tasks.build {
-    dependsOn(compileNative, nativesJar, zipBuild)
-}
-
 publishing {
     publications {
-        if (deployNative) {
-            create<MavenPublication>("native${platform.capitalized}") {
-                artifact(nativesJar)
-                artifact(zipBuild)
-                artifactId = "mpv-natives-${platform}"
-            }
+        create<MavenPublication>("native${platform.capitalized}") {
+            artifact(zipBuild)
+            artifactId = "mpv-natives-${platform}"
         }
     }
 }
