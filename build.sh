@@ -98,6 +98,12 @@ cpp = '$PREFIX-g++'
 ar = '$PREFIX-ar'
 strip = '$PREFIX-strip'
 pkgconfig = '$PREFIX-pkg-config'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'x86'
+cpu = 'x86_64'
+endian = 'little'
 EOF
     MESON_CROSS_ARGS="--cross-file $CROSS_FILE"
 fi
@@ -123,16 +129,16 @@ sudo apt-get install -y liblcms-dev:$ARCH libunwind-dev:$ARCH libjpeg-dev:$ARCH 
     libva-wayland2:$ARCH libwayland-client0:$ARCH libwayland-cursor0:$ARCH libwayland-egl1:$ARCH \
     libx11-xcb1:$ARCH libxcb-dri2-0:$ARCH libxcb-dri3-0:$ARCH libxcb-glx0:$ARCH \
     libpipewire-0.3-dev:$ARCH libarchive-dev:$ARCH wayland-protocols:$ARCH \
-    libxpresent-dev:$ARCH libvulkan1:$ARCH libvulkan-dev:$ARCH
+    libxpresent-dev:$ARCH libvulkan1:$ARCH libvulkan-dev:$ARCH libavcodec-dev:$ARCH \
+    libavdevice-dev:$ARCH libavfilter-dev:$ARCH libavformat-dev:$ARCH libavutil-dev:$ARCH \
+    libpostproc-dev:$ARCH libswresample-dev:$ARCH libswscale-dev:$ARCH
 sudo pip3 install meson --break-system-packages
 
-FFMPEG_REPO_DIR="$(pwd)/.repos/ffmpeg"
 LIBASS_REPO_DIR="$(pwd)/.repos/libass"
 LIBPLACEBO_REPO_DIR="$(pwd)/.repos/libplacebo"
 MPV_REPO_DIR="$(pwd)/.repos/mpv"
 
 mkdir -p .repos
-clone_or_update "https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg.git" "$FFMPEG_REPO_DIR"
 clone_or_update "https://github.com/libass/libass" "$LIBASS_REPO_DIR"
 clone_or_update "https://github.com/haasn/libplacebo" "$LIBPLACEBO_REPO_DIR"
 clone_or_update "https://github.com/mpv-player/mpv.git" "$MPV_REPO_DIR"
@@ -142,22 +148,7 @@ pushd "$BUILD_DIR"
 git clone "$MPV_REPO_DIR" mpv
 pushd mpv
 git checkout "v$MPV_VERSION"
-
 mkdir -p subprojects
-cat <<EOF > subprojects/ffmpeg.wrap
-[wrap-git]
-url = $FFMPEG_REPO_DIR
-revision = meson-$FFMPEG_VERSION
-depth = 1
-[provide]
-libavcodec = libavcodec_dep
-libavdevice = libavdevice_dep
-libavfilter = libavfilter_dep
-libavformat = libavformat_dep
-libavutil = libavutil_dep
-libswresample = libswresample_dep
-libswscale = libswscale_dep
-EOF
 
 cat <<EOF > subprojects/libass.wrap
 [wrap-git]
@@ -173,7 +164,7 @@ revision = v$LIBPLACEBO_VERSION
 depth = 1
 clone-recursive = true
 EOF
-meson setup build -Dlibmpv=true -Ddefault_library=static -Dlibass:default_library=static -Dffmpeg:default_library=static \
+meson setup build -Dlibmpv=true -Ddefault_library=static -Dlibass:default_library=static \
    -Dwayland=disabled -Dx11=disabled -Dlibarchive=disabled -Dlibplacebo:vk-proc-addr=disabled -Dprefix=/ $MESON_CROSS_ARGS
 ninja -C build libmpv.a subprojects/libass/libass/libass.a subprojects/libplacebo/src/libplacebo.a
 
