@@ -71,4 +71,18 @@ publishing {
             artifactId = "mpv-natives-${platform}"
         }
     }
+
+    repositories {
+        val url = System.getenv("MAVEN_REPO_URL") ?: return@repositories
+        maven(url) {
+            name = "reposilite"
+            credentials {
+                username = System.getenv("MAVEN_REPO_USERNAME") ?: ""
+                password = System.getenv("MAVEN_REPO_PASSWORD") ?: ""
+            }
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
 }
