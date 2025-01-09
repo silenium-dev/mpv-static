@@ -196,5 +196,3 @@ fi
 rm lib/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libswresample,libswscale}.a
 rm -r include/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libswresample,libswscale}/
 popd
-
-cp LICENSE.* "$OUTPUT_DIR"
