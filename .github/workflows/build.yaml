@@ -94,10 +94,7 @@ jobs:
   #          repo-password: ${{ secrets.REPOSILITE_PASSWORD }}
   linux-x86:
     runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        gpl: [ "false", "true" ]
-    name: linux-x86 (${{ matrix.gpl == 'true' && 'GPL' || 'LGPL' }})
+    name: linux-x86
     steps:
       - uses: actions/checkout@v4
       - uses: silenium-dev/actions/base/gradle@main
@@ -111,10 +108,7 @@ jobs:
           extra-args: "-Pdeploy.kotlin=false -Pdeploy.native=true -Pdeploy.platform=linux-x86"
   linux-x86_64:
     runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        gpl: [ "false", "true" ]
-    name: linux-x86_64 (${{ matrix.gpl == 'true' && 'GPL' || 'LGPL' }})
+    name: linux-x86_64
     steps:
       - uses: actions/checkout@v4
       - uses: silenium-dev/actions/base/gradle@main
