@@ -193,10 +193,8 @@ if [ -d lib/$PREFIX ]; then
     mv lib/$PREFIX/* lib/
     rmdir lib/$PREFIX
 fi
-rm lib/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libpostproc,libswresample,libswscale}.a
-rm lib/pkgconfig/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libpostproc,libswresample,libswscale}.pc
-rm -r include/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libpostproc,libswresample,libswscale}/
-rm -r bin/
-rm -r etc/
-rm -r share/
+rm lib/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libpostproc,libswresample,libswscale}.a || true
+rm lib/pkgconfig/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libpostproc,libswresample,libswscale}.pc || true
+rm -r include/{libavcodec,libavdevice,libavfilter,libavformat,libavutil,libpostproc,libswresample,libswscale}/ || true
+rm -r bin/ etc/ share/ || true
 popd
