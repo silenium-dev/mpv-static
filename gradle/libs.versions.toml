@@ -1,0 +1,9 @@
+[versions]
+kotlin = "2.1.0"
+jni-utils = "0.1.6"
+
+[libraries]
+jni-utils = { group = "dev.silenium.libs.jni", name = "jni-utils", version.ref = "jni-utils" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
