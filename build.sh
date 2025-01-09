@@ -170,6 +170,13 @@ ninja -C build libmpv.a subprojects/libass/libass/libass.a subprojects/libplaceb
 
 # Copy the static libraries to the output directory
 DESTDIR="$OUTPUT_DIR" meson install -C build
-
 popd; popd
+
+pushd "$OUTPUT_DIR"
+if [ -d lib/$PREFIX ]; then
+    mv lib/$PREFIX/* lib/
+    rmdir lib/$PREFIX
+fi
+popd
+
 cp LICENSE.* "$OUTPUT_DIR"
